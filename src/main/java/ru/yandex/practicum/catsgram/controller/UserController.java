@@ -1,5 +1,7 @@
 package ru.yandex.practicum.catsgram.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.catsgram.controller.exceptions.InvalidEmailException;
 import ru.yandex.practicum.catsgram.controller.exceptions.UserAlreadyExistException;
@@ -11,10 +13,13 @@ import java.util.Set;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final Set<User> users = new HashSet<>();
 
     @GetMapping
     public Set<User> findAll() {
+        log.debug("Текущее количество пользователей: {}", users.size());
         return users;
     }
 
@@ -26,6 +31,7 @@ public class UserController {
         if (users.contains(user)) {
             throw new UserAlreadyExistException();
         }
+        log.debug("Пользователь: {}", user);
         users.add(user);
         return user;
     }
